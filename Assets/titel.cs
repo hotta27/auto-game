@@ -10,8 +10,8 @@ public class titel : MonoBehaviour
     public GameObject ca,p;
     public Transform target;
     int t,s=500;
-    LineRenderer linerend;
-    
+
+   
 
 
     void Start()
@@ -19,8 +19,6 @@ public class titel : MonoBehaviour
         t = 0;
         rb = GetComponent<Rigidbody>();
 
-     
-    
     }
 
     void Update()
@@ -36,35 +34,38 @@ public class titel : MonoBehaviour
         rb.AddForce(x, y, 0);
         ca.transform.position = new Vector3(p.transform.position.x, p.transform.position.y + 1, -10);
 
-      Vector3 origin = target.position; // 原点
-      Vector3 direction = new Vector3(1, 0, 0); // X軸方向を表すベクトル
-      Ray ray = new Ray(origin:origin, direction:direction); // Rayを生成
-     
-      RaycastHit hit;
-      if (Physics.Raycast(ray,out hit,10.0f))
-        {
-            Debug.Log(hit.collider.gameObject.tag);
-        }
-
-      //Lineを描画する関数
-      DrawRayLine(ray.origin, ray.direction *10);
-
-    }
-    
-     private void DrawRayLine(Vector3 start, Vector3 direction)
-    {
-      //LineRendererコンポーネントの取得
-      linerend = this.GetComponent<LineRenderer>();
-
-      //線の太さを設定
-      linerend.startWidth = 0.04f;
-      linerend.endWidth = 0.04f;
-
-      //始点, 終点を設定し, 描画
-      linerend.SetPosition(0, start);
-      linerend.SetPosition(1, start + direction);
-
       
-    }
+      Vector3 origin = this.transform.position; // 原点
 
+        int vx=10, vy=0;
+        for (int i = 0; i < 4; i++)
+        {
+            switch (i)
+            {
+                case 1:
+                    vx = -10;
+                    break;
+                case 2:
+                    vx = 0;
+                    vy = 10;
+                    break;
+                case 3:
+                    vy = -10;
+                    break;
+            }
+            Vector3 direction = new Vector3(vx, vy, 0); // X軸方向を表すベクトル
+            Ray ray = new Ray(origin: origin, direction: direction); // Rayを生成
+            RaycastHit hit;
+            float len = direction.x;
+            if (i > 1) len = direction.y;
+
+            if (Physics.Raycast(ray, out hit, len))
+            {
+                Debug.Log(hit.collider.gameObject.tag);
+            }
+
+            Debug.DrawRay(ray.origin, direction, Color.red, .5f);
+        }
+    }
+   
 }

@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+public class Data
+{
+    public float[] input=new float[4], output=new float[5], w=new float[9];
+    
+}
+
 public class titel : MonoBehaviour
 {
     public float speed = 10.0f;
@@ -10,15 +16,17 @@ public class titel : MonoBehaviour
     public GameObject ca,p;
     public Transform target;
     int t,s=500;
-
-   
-
+    Data data;
 
     void Start()
     {
         t = 0;
         rb = GetComponent<Rigidbody>();
-
+        
+        data = new Data();
+        foreach (int i in data.input) data.input[i] = Random.Range(-1f, 1f);
+        foreach (int i in data.output) data.output[i] = Random.Range(-1f, 1f);
+        foreach (int i in data.w) data.w[i] = Random.Range(-1f, 1f);
     }
 
     void Update()
@@ -68,4 +76,17 @@ public class titel : MonoBehaviour
         }
     }
    
+    void Network()
+    {
+        float x,z;
+        foreach(int i in data.input) x = data.input[i] * data.w[i];
+        z = Sigmoid(x);
+        
+    }
+
+    float Sigmoid(float x)
+    {
+        float z = 1 / (1 + Mathf.Exp(-x));
+        return z;
+    }
 }

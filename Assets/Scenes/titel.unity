@@ -208,7 +208,7 @@ MonoBehaviour:
   rb: {fileID: 80537758}
   ca: {fileID: 1877385365}
   p: {fileID: 80537755}
-  target: {fileID: 80537756}
+  goal: {fileID: 1598628728}
 --- !u!54 &80537758
 Rigidbody:
   m_ObjectHideFlags: 0

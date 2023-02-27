@@ -5,7 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class Data
 {
-    public float[] input=new float[4], output=new float[5], w=new float[9];
+    public float[] input=new float[4], output=new float[2], w=new float[6];
+    public float point=0f;
     
 }
 
@@ -14,21 +15,22 @@ public class titel : MonoBehaviour
     public float speed = 10.0f;
     public Rigidbody rb;
     public GameObject ca,p;
-    public Transform target;
+    public Transform goal;
     int t,s=500;
+    float n=60;
     Data data;
-    int nomber;
+  
 
     void Start()
     {
         t = 0;
         rb = GetComponent<Rigidbody>();
-
+       
         data = new Data();
         for (int i = 0; i < data.input.Length; i++) data.input[i] = 0;
         for (int i = 0; i < data.output.Length; i++) data.output[i] = Random.Range(-1f, 1f);
         for (int i = 0; i < data.w.Length; i++) data.w[i] = Random.Range(-1f, 1f);
-        nomber = Random.Range(0, 5);
+        
 
 
     }
@@ -38,9 +40,13 @@ public class titel : MonoBehaviour
         float x = 0,y=0;
         if (t == 0)
         {
-            //outputを2次元にする。x,yを出力にする
-            x = Random.Range(-1f, 1f) * speed;
-            y = Random.Range(-1f, 1f) * speed;
+            if(Random.Range(0f,1f)<0.4f){
+             x = Random.Range(-1f, 1f) * speed;
+             y = Random.Range(-1f, 1f) * speed;
+            }else{
+            x=data.output[0] * speed;
+            y=data.output[1] * speed;
+            }
 
             t = s;
         }t--;
@@ -79,12 +85,15 @@ public class titel : MonoBehaviour
                 {
                     case "out":
                         data.input[i] = 0.5f;
+                        data.point-=1f;
                         break;
                     case "block":
                         data.input[i] = 1.0f;
+                        data.point+=1f;
                         break;
                     case "item":
                         data.input[i] = 1.5f;
+                        data.point+=2f;
                         break;
                     default:
                         data.input[i] = 2.0f;
@@ -95,6 +104,18 @@ public class titel : MonoBehaviour
             Debug.DrawRay(ray.origin, direction, Color.red, .5f);
         }
         Network();
+
+        //報酬
+        if(n<=0){
+        float goallen=Vector3.Distance(origin,goal.position);
+        Debug.Log(goallen);
+        if(goallen<=5f) data.point+=3f;
+        else if(goallen<=10f) data.point+=2f;
+        else if(goallen<=15f) data.point=1f;
+        SceneManager.LoadScene("titel");
+        }
+        else n-=0.001f;
+        Debug.Log(n);
     }
    
     void Network()
@@ -106,18 +127,7 @@ public class titel : MonoBehaviour
         for (int i = 0; i < data.output.Length; i++)
         {
             data.output[i] = z * data.w[i + data.input.Length];
-            Debug.Log(data.output[i]+" "+i);
-
-            if (i == 0)
-            {
-                num = data.output[0];
-                nomber = 0;
-            }
-            else if (num < data.output[i])
-            {
-                num = data.output[i];
-                nomber = i;
-            }
+            //Debug.Log(data.output[i]+" "+i);         
         }
 
     }

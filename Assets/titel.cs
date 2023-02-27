@@ -3,12 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Data
-{
-    public float[] input=new float[4], output=new float[2], w=new float[6];
-    public float point=0f;
-    
-}
+
 
 public class titel : MonoBehaviour
 {
@@ -17,22 +12,35 @@ public class titel : MonoBehaviour
     public GameObject ca,p;
     public Transform goal;
     int t,s=500;
-    float n=60;
+    float n=60,pp=0;
     Data data;
-  
+    savedata save;
+    GameObject x;
 
     void Start()
     {
         t = 0;
         rb = GetComponent<Rigidbody>();
        
-        data = new Data();
-        for (int i = 0; i < data.input.Length; i++) data.input[i] = 0;
-        for (int i = 0; i < data.output.Length; i++) data.output[i] = Random.Range(-1f, 1f);
-        for (int i = 0; i < data.w.Length; i++) data.w[i] = Random.Range(-1f, 1f);
-        
+        save=new savedata();
 
 
+        if(!save.chack("savedata")){
+            data = new Data();
+            for (int i = 0; i < data.input.Length; i++) data.input[i] = 0;
+            for (int i = 0; i < data.output.Length; i++) data.output[i] = Random.Range(-1f, 1f);
+            for (int i = 0; i < data.w.Length; i++) data.w[i] = Random.Range(-1f, 1f);
+        }else{
+            data=save.Jload("savedata");
+            for(int i=0;i<2;i++){
+                data.w[Random.Range(0,data.w.Length)]=Random.Range(-1f,1f);
+                data.w[Random.Range(0,data.w.Length)]+=0.001f;
+                data.w[Random.Range(0,data.w.Length)]-=0.001f;
+            }
+            pp=data.point;
+            data.point=0;
+
+        }
     }
 
     void Update()
@@ -40,13 +48,13 @@ public class titel : MonoBehaviour
         float x = 0,y=0;
         if (t == 0)
         {
-            if(Random.Range(0f,1f)<0.4f){
-             x = Random.Range(-1f, 1f) * speed;
-             y = Random.Range(-1f, 1f) * speed;
-            }else{
+            // if(Random.Range(0f,1f)<0.4f){
+            //  x = Random.Range(-1f, 1f) * speed;
+            //  y = Random.Range(-1f, 1f) * speed;
+            // }else{
             x=data.output[0] * speed;
             y=data.output[1] * speed;
-            }
+            //}
 
             t = s;
         }t--;
@@ -108,14 +116,16 @@ public class titel : MonoBehaviour
         //報酬
         if(n<=0){
         float goallen=Vector3.Distance(origin,goal.position);
-        Debug.Log(goallen);
+        //Debug.Log(goallen);
         if(goallen<=5f) data.point+=3f;
         else if(goallen<=10f) data.point+=2f;
         else if(goallen<=15f) data.point=1f;
+
+        if(pp<data.point || Random.Range(0f,1f)<=0.1f) {save.Jsave(data,"savedata"); Debug.Log("grow up");}
         SceneManager.LoadScene("titel");
         }
         else n-=0.001f;
-        Debug.Log(n);
+        //Debug.Log(n);
     }
    
     void Network()

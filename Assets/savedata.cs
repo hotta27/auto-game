@@ -2,18 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System; // UnityJson‚ğg‚¤ê‡‚É•K—v
-using System.IO; // ƒtƒ@ƒCƒ‹‘‚«‚İ‚É•K—v
+using System; // UnityJsonï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ê‡ï¿½É•Kï¿½v
+using System.IO; // ï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ‚É•Kï¿½v
 
 
     [Serializable]
 public class Data
 {
-    public int point,good=0,bad=0,sum=0,logpoint=100,slotcount=10,npo=0;
-    public DateTime bdate,ndate;
-    public string date;
-    public bool log = true;
-    public string []varname = { "point","sum","logpoint","slotcount" };
+    public float[] input=new float[4], output=new float[2], w=new float[6];
+    public float point=0f;
+    
 }
 
 public class savedata : MonoBehaviour
@@ -28,7 +26,7 @@ public class savedata : MonoBehaviour
 
     public Data Jload(string name)
     {
-        // AssetsƒtƒHƒ‹ƒ_‚©‚çƒ[ƒh
+        // Assetsï¿½tï¿½Hï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½çƒï¿½[ï¿½h
         string path = Application.dataPath + "/" + name + ".txt";
         var json = File.ReadAllText(path);
         Data data = JsonUtility.FromJson<Data>(json);
@@ -40,7 +38,7 @@ public class savedata : MonoBehaviour
         string path = Application.dataPath + "/" + name + ".txt";
         return File.Exists(path);
     }
-    /*g‚¢•û
+    /*ï¿½gï¿½ï¿½ï¿½ï¿½
     Data m,s;
     void Start()
     {
@@ -50,10 +48,10 @@ public class savedata : MonoBehaviour
         s=Jload("test");
         Debug.Log(s.x + "," + s.num);
     }*/
-    /*‹Œ•Û‘¶ŠÖ”
+    /*ï¿½ï¿½ï¿½Û‘ï¿½ï¿½Öï¿½
     //point
     public static string read() {
-        // “Ç‚İ‚İ
+        // ï¿½Ç‚İï¿½ï¿½ï¿½
         string path = Application.dataPath + "/" + "save_point.txt";
         string data = File.ReadAllText(path);
         

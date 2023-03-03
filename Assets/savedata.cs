@@ -9,8 +9,8 @@ using System.IO; // �t�@�C���������݂ɕK�v
     [Serializable]
 public class Data
 {
-    public float[] input=new float[4], output=new float[2], w=new float[6];
-    public float point=0f;
+    public float[] input=new float[9], output=new float[2], w=new float[11];
+    public float point=-99999f;
     
 }
 

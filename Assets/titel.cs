@@ -41,20 +41,22 @@ public class titel : MonoBehaviour
             pp=data.point;
             data.point=0;
         }
+        
     }
 
     void Update()
     {
+        Debug.Log(data.point);
         float x = 0,y=0;
         if (t == 0)
         {
-            if(Random.Range(0f,1f)<0.4f){
-             x = Random.Range(-1f, 1f) * speed;
-             y = Random.Range(-1f, 1f) * speed;
-            }else{
+            // if(Random.Range(0f,1f)<0.4f){
+            //  x = Random.Range(-1f, 1f) * speed;
+            //  y = Random.Range(-1f, 1f) * speed;
+            // }else{
             x=data.output[0] * speed;
             y=data.output[1] * speed;
-            }
+            //}
 
             t = s;
         }t--;
@@ -98,38 +100,34 @@ public class titel : MonoBehaviour
                         break;
                     case "block":
                         data.input[i] = 1.0f;
-                        data.point+=1f;
+                        data.point+=0.1f;
                         break;
                     case "item":
                         data.input[i] = 1.5f;
-                        data.point+=2f;
+                        data.point+=0.2f;
                         break;
                     default:
                         data.input[i] = 2.0f;
                         break;
                 }
                 data.input[i+4]=Vector3.Distance(origin,hit.transform.position);
-                Debug.Log(data.input[i]+" "+i);
-                save.Jsave(data,"in");
-                
-
+                //Debug.Log(data.input[i]+" "+i);
             }
 
             Debug.DrawRay(ray.origin, direction, Color.red, .5f);
         }
+        data.point-=0.001f;
+        data.input[data.input.Length-1]=Vector3.Distance(origin,goal.position);
+        //Debug.Log(data.input[data.input.Length-1]);
         Network();
 
-        //報酬
+        //終了時
         if(n<=0){
-        float goallen=Vector3.Distance(origin,goal.position);
-        //Debug.Log(goallen);
-        if(goallen<=5f) data.point+=3f;
-        else if(goallen<=10f) data.point+=2f;
-        else if(goallen<=15f) data.point=1f;
+        if(data.input[data.input.Length-1]<=5f) data.point+=3f;
+        else if(data.input[data.input.Length-1]<=10f) data.point+=2f;
+        else if(data.input[data.input.Length-1]<=15f) data.point=1f;
 
-        Debug.Log(data.point);
-        if(pp<data.point || Random.Range(0f,1f)<=0.1f) {save.Jsave(data,"savedata"); Debug.Log("grow up");}
-        SceneManager.LoadScene("titel");
+       finsh();
         }
         else n-=0.001f;
         //Debug.Log(n);
@@ -153,5 +151,19 @@ public class titel : MonoBehaviour
     {
         float z = 1 / (1 + Mathf.Exp(-x));
         return z;
+    }
+
+    void finsh (){
+        Debug.Log(data.point+" <-point");
+        if(pp<data.point || Random.Range(0f,1f)<=0.1f) {save.Jsave(data,"savedata"); Debug.Log("grow up");}
+        SceneManager.LoadScene("titel");
+    }
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "goal")
+        {
+            data.point+=10f;
+           finsh();
+        }
     }
 }

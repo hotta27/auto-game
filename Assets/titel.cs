@@ -30,6 +30,7 @@ public class titel : MonoBehaviour
             for (int i = 0; i < data.input.Length; i++) data.input[i] = 0;
             for (int i = 0; i < data.output.Length; i++) data.output[i] = Random.Range(-1f, 1f);
             for (int i = 0; i < data.w.Length; i++) data.w[i] = Random.Range(-1f, 1f);
+            save.Jsave(data,"savedata");
         }else{
             data=save.Jload("savedata");
             for(int i=0;i<2;i++){
@@ -39,7 +40,6 @@ public class titel : MonoBehaviour
             }
             pp=data.point;
             data.point=0;
-
         }
     }
 
@@ -48,13 +48,13 @@ public class titel : MonoBehaviour
         float x = 0,y=0;
         if (t == 0)
         {
-            // if(Random.Range(0f,1f)<0.4f){
-            //  x = Random.Range(-1f, 1f) * speed;
-            //  y = Random.Range(-1f, 1f) * speed;
-            // }else{
+            if(Random.Range(0f,1f)<0.4f){
+             x = Random.Range(-1f, 1f) * speed;
+             y = Random.Range(-1f, 1f) * speed;
+            }else{
             x=data.output[0] * speed;
             y=data.output[1] * speed;
-            //}
+            }
 
             t = s;
         }t--;
@@ -67,6 +67,7 @@ public class titel : MonoBehaviour
         int vx=10, vy=0;
         for (int i = 0; i < 4; i++)
         {
+           
             switch (i)
             {
                 case 1:
@@ -83,17 +84,17 @@ public class titel : MonoBehaviour
             Vector3 direction = new Vector3(vx, vy, 0); // X軸方向を表すベクトル
             Ray ray = new Ray(origin: origin, direction: direction); // Rayを生成
             RaycastHit hit;
-            float len = direction.x;
-            if (i > 1) len = direction.y;
-
-            if (Physics.Raycast(ray, out hit, len))
+            
+            //Rayの衝突判定
+            if (Physics.Raycast(ray, out hit, 10f))
             {
+                
                 //Debug.Log(hit.collider.gameObject.tag);
                 switch (hit.collider.gameObject.tag)
                 {
                     case "out":
                         data.input[i] = 0.5f;
-                        data.point-=1f;
+                        data.point-=.1f;
                         break;
                     case "block":
                         data.input[i] = 1.0f;
@@ -107,6 +108,11 @@ public class titel : MonoBehaviour
                         data.input[i] = 2.0f;
                         break;
                 }
+                data.input[i+4]=Vector3.Distance(origin,hit.transform.position);
+                Debug.Log(data.input[i]+" "+i);
+                save.Jsave(data,"in");
+                
+
             }
 
             Debug.DrawRay(ray.origin, direction, Color.red, .5f);
@@ -121,6 +127,7 @@ public class titel : MonoBehaviour
         else if(goallen<=10f) data.point+=2f;
         else if(goallen<=15f) data.point=1f;
 
+        Debug.Log(data.point);
         if(pp<data.point || Random.Range(0f,1f)<=0.1f) {save.Jsave(data,"savedata"); Debug.Log("grow up");}
         SceneManager.LoadScene("titel");
         }

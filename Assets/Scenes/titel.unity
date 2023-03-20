@@ -215,6 +215,7 @@ MonoBehaviour:
   ca: {fileID: 1877385365}
   p: {fileID: 80537755}
   goal: {fileID: 1991642399}
+  wb: 1
 --- !u!54 &80537758
 Rigidbody:
   m_ObjectHideFlags: 0

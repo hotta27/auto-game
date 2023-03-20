@@ -11,6 +11,7 @@ public class titel : MonoBehaviour
     public Rigidbody rb;
     public GameObject ca,p;
     public Transform goal;
+    public bool wb=true;
     int t,s=500,input,output,w;
     float n=60,pp=0;
     Data data;
@@ -24,6 +25,7 @@ public class titel : MonoBehaviour
        
         save=new savedata();
 
+        
 
         if(!save.chack("savedata")){
             data = new Data();
@@ -33,18 +35,20 @@ public class titel : MonoBehaviour
             save.Jsave(data,"savedata");
         }else{
             data=save.Jload("savedata");
-            for(int i=0;i<2;i++){
-                data.w[Random.Range(0,data.w.Length)]=Random.Range(-1f,1f);
-                data.w[Random.Range(0,data.w.Length)]+=0.001f;
-                data.w[Random.Range(0,data.w.Length)]-=0.001f;
+            if(wb){
+                Debug.Log("wwwww");
+                //重み変更
+                for(int i=0;i<data.w.Length;i++){
+                    data.w[i]+=Random.Range(-0.5f,0.5f);
+                }
             }
             pp=data.point;
             data.point=0;
         }
+        
         input=data.input.Length;
         output=data.output.Length;
         w=data.w.Length;
-
         
     }
 
@@ -100,7 +104,7 @@ public class titel : MonoBehaviour
                 {
                     case "out":
                         data.input[i] = 0.5f;
-                        data.point-=.01f;
+                        data.point-=0.01f;
                         break;
                     case "block":
                         data.input[i] = 1.0f;
@@ -108,7 +112,7 @@ public class titel : MonoBehaviour
                         break;
                     case "item":
                         data.input[i] = 1.5f;
-                        data.point+=0.02f;
+                         data.point+=0.02f;
                         break;
                     default:
                         data.input[i] = 2.0f;
@@ -154,7 +158,7 @@ public class titel : MonoBehaviour
         }
         for (int i = 0; i < data.output.Length; i++)
         {
-            data.output[i] = zz[net-1] * data.w[i + data.input.Length+N];
+            data.output[i] = zz[net-1] * data.w[i + data.input.Length + N];
             //Debug.Log(data.output[i]+" "+i);         
         }
 
@@ -182,6 +186,23 @@ public class titel : MonoBehaviour
         {
             data.point+=100f;
            finsh();
+        }
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "out")
+        {
+            data.point-=1f;
+        }
+        else if (collision.gameObject.tag == "block")
+        {
+            data.point+=1f;
+        }
+        else if (collision.gameObject.tag == "item")
+        {
+            data.point+=2f;
+
         }
     }
 }

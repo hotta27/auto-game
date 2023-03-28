@@ -60,7 +60,7 @@ public class titel : MonoBehaviour
         float x = 0,y=0;
         if (t == 0)
         {
-            if(Random.Range(0f,1f)<data.move){
+            if(Random.Range(0f,1f)<data.move || wb==true){
              x = Random.Range(-1f, 1f) * speed;
              y = Random.Range(-1f, 1f) * speed;
             }else{
@@ -167,15 +167,36 @@ public class titel : MonoBehaviour
             }
         SceneManager.LoadScene("titel");
     }
+
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "goal")
         {
             Debug.Log("goal");
             data.point+=100f;
-           finsh();
+            data.goalcount += 1;
+            finsh();
         }
+    }
 
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "out")
+        {
+            data.point-=1f;
+        }
+        else if (collision.gameObject.tag == "block")
+        {
+            data.point+=1f;
+        }
+        else if (collision.gameObject.tag == "item")
+        {
+            data.point+=2f;
+
+        }
+    }
+    void OnTriggerStay(Collider other)
+    {
         int i = 0;
         switch (other.gameObject.tag)
         {
@@ -199,22 +220,5 @@ public class titel : MonoBehaviour
         data.input[2] = other.transform.position.y;
         //Debug.Log(data.input[1] + " "+"\n"+ data.input[2]+other.gameObject.tag);
         data.input[3] = Vector3.Distance(origin, other.transform.position);
-    }
-
-    void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.tag == "out")
-        {
-            data.point-=1f;
-        }
-        else if (collision.gameObject.tag == "block")
-        {
-            data.point+=1f;
-        }
-        else if (collision.gameObject.tag == "item")
-        {
-            data.point+=2f;
-
-        }
     }
 }

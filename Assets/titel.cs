@@ -26,8 +26,6 @@ public class titel : MonoBehaviour
        
         save=new savedata();
 
-        
-
         if(!save.chack("savedata")){
             data = new Data();
             for (int i = 0; i < data.input.Length; i++) data.input[i] = 0;
@@ -129,25 +127,52 @@ public class titel : MonoBehaviour
    
     void Network()
     {
-        int N=1,M=1,j,k=0;
-        float x=0,z=0;
-        float[,] xx=new float[N,M],zz=new float[N,M];
+        // int N=1,M=1,j,k=0;
+        // float x=0,z=0;
+        // float[,] xx=new float[N,M],zz=new float[N,M];
         
-        for (int i=0; i<data.input.Length;i++) x += data.input[i] * data.w[i];  
-        z = Sigmoid(x);
-        for (j = 0; j < N; j++)
-        {
-            for (k = 0; k < M; k++)
-            {
-                xx[j,k] = 0;
-                xx[j,k] += z * data.w[input + 1];
-                zz[j,k] = Sigmoid(xx[j,k]);
+        // for (int i=0; i<data.input.Length;i++) x += data.input[i] * data.w[i];  
+        // z = Sigmoid(x);
+        // for (j = 0; j < N; j++)
+        // {
+        //     for (k = 0; k < M; k++)
+        //     {
+        //         xx[j,k] = 0;
+        //         xx[j,k] += z * data.w[input + 1];
+        //         zz[j,k] = Sigmoid(xx[j,k]);
+        //     }
+        // }
+        // for (int i = 0; i < data.output.Length; i++)
+        // {
+        //     data.output[i] = zz[j-1,k-1] * data.w[i + data.input.Length + N];
+        //     //Debug.Log(data.output[i]+" "+i);         
+        // }
+        int[] M={4,8,8,4,2};
+        int N=M.Length;
+        float x=0,z=0;
+        float[] xx=new float[input],net=new float[input];
+         
+         //Debug.Log("----------------");
+        for(int i=0;i<N;i++){
+            for(int j=0;j<M[i];j++){
+                if(i==0)               
+                    net=data.input;               
+                else {
+                    net=xx;
+                    System.Array.Resize(ref net, xx.Length);
+                    System.Array.Resize(ref xx,M[i]);
+                    }
+
+                    // foreach(float name in net)
+                    // {
+                    //     Debug.Log(name+" <"+i+" ,"+j+">");
+                    // } 
+                for(int k=0;k<net.Length;k++){
+                    xx[j]+=net[k]*data.w[i+j+k];
+                }
+                xx[j]=Sigmoid(xx[j]);
+                if(i==N-1) data.output[j]=xx[j];
             }
-        }
-        for (int i = 0; i < data.output.Length; i++)
-        {
-            data.output[i] = zz[j-1,k-1] * data.w[i + data.input.Length + N];
-            //Debug.Log(data.output[i]+" "+i);         
         }
 
     }
@@ -170,13 +195,7 @@ public class titel : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "goal")
-        {
-            Debug.Log("goal");
-            data.point+=100f;
-            data.goalcount += 1;
-            finsh();
-        }
+        
     }
 
     void OnCollisionEnter(Collision collision)
@@ -193,6 +212,12 @@ public class titel : MonoBehaviour
         {
             data.point+=2f;
 
+        }else if (collision.gameObject.tag == "goal")
+        {
+            Debug.Log("goal");
+            data.point+=100f;
+            data.goalcount += 1;
+            finsh();
         }
     }
     void OnTriggerStay(Collider other)

@@ -12,6 +12,7 @@ public class titel : MonoBehaviour
     public GameObject ca,p;
     public Transform goal;
     public bool wb=true;
+    public string dataname="savedata";
     int t,s=500,input,output,w;
     float n=30,pp=0;
     Data data;
@@ -33,12 +34,14 @@ public class titel : MonoBehaviour
             for (int i = 0; i < data.w.Length; i++) data.w[i] = Random.Range(-1f, 1f);
             save.Jsave(data,"savedata");
         }else{
-            data=save.Jload("savedata");
+            data=save.Jload(dataname);
             if(wb){
                 //Debug.Log("wwwww");
                 //重み変更
                 for(int i=0;i<data.w.Length;i++){
-                    data.w[i]+=Random.Range(-0.5f,0.5f);
+                    float a=(10f-data.goalcount)*0.1f;
+                    if(a<0)a=1;
+                    data.w[i]+=Random.Range(-0.5f*a,0.5f*a);
                 }
             }
             pp=data.point;
@@ -58,7 +61,7 @@ public class titel : MonoBehaviour
         float x = 0,y=0;
         if (t == 0)
         {
-            if(Random.Range(0f,1f)<data.move || wb==true){
+            if(Random.Range(0f,1f)<0.1f || wb==true){
              x = Random.Range(-1f, 1f) * speed;
              y = Random.Range(-1f, 1f) * speed;
             }else{
@@ -115,9 +118,9 @@ public class titel : MonoBehaviour
 
         //終了時
         if(n<=0){
-        if(data.input[data.input.Length-1]<=5f) data.point+=50f;
-        else if(data.input[data.input.Length-1]<=10f) data.point+=10f;
-        else if(data.input[data.input.Length-1]<=15f) data.point=1f;
+        float a=100-Vector3.Distance(origin,goal.position);
+        if(a<0)a=0;
+        data.point+=a;
 
         finsh();
         }
@@ -147,33 +150,40 @@ public class titel : MonoBehaviour
         //     data.output[i] = zz[j-1,k-1] * data.w[i + data.input.Length + N];
         //     //Debug.Log(data.output[i]+" "+i);         
         // }
-        int[] M={4,8,8,4,2};
-        int N=M.Length;
+        int[] M={5,4,3,2,1,2};
+        int N=M.Length,wc=-1;
         float x=0,z=0;
         float[] xx=new float[input],net=new float[input];
          
          //Debug.Log("----------------");
+                        
+        xx=data.input;                  
         for(int i=0;i<N;i++){
-            for(int j=0;j<M[i];j++){
-                if(i==0)               
-                    net=data.input;               
-                else {
+            for(int j=0;j<M[i];j++){                
                     net=xx;
                     System.Array.Resize(ref net, xx.Length);
                     System.Array.Resize(ref xx,M[i]);
-                    }
-
+                
                     // foreach(float name in net)
                     // {
                     //     Debug.Log(name+" <"+i+" ,"+j+">");
-                    // } 
-                for(int k=0;k<net.Length;k++){
-                    xx[j]+=net[k]*data.w[i+j+k];
+                    // }
+                    int k; 
+                for(k=0;k<net.Length;k++){
+                    wc+=1;
+                    xx[j]+=net[k]*data.w[wc];
+                    // Debug.Log(i+","+j+","+k+":"+net.Length);
                 }
+                
                 xx[j]=Sigmoid(xx[j]);
                 if(i==N-1) data.output[j]=xx[j];
             }
+
+
+
+
         }
+        
 
     }
 
@@ -185,7 +195,7 @@ public class titel : MonoBehaviour
 
     void finsh (){
         Debug.Log(data.point+" <-point");
-        if(pp<data.point || Random.Range(0f,1f)<=data.move) {
+        if((pp<=data.point || Random.Range(0f,1f)<=data.move)&&wb) {
             data.move-=0.01f;
             save.Jsave(data,"savedata"); 
             Debug.Log("grow up");
@@ -206,17 +216,18 @@ public class titel : MonoBehaviour
         }
         else if (collision.gameObject.tag == "block")
         {
-            data.point+=1f;
+            data.point+=2f;
         }
         else if (collision.gameObject.tag == "item")
         {
-            data.point+=2f;
+            data.point+=4f;
 
         }else if (collision.gameObject.tag == "goal")
         {
             Debug.Log("goal");
-            data.point+=100f;
+            data.point+=200f;
             data.goalcount += 1;
+            save.Jsave(data,"goal"+data.goalcount);
             finsh();
         }
     }

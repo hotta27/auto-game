@@ -17,8 +17,10 @@ public class titel : MonoBehaviour
     float n=30,pp=0;
     Data data;
     savedata save;
-    GameObject x;
+    GameObject xnot;
     Vector3 origin;
+
+    
 
     void Start()
     {
@@ -39,7 +41,7 @@ public class titel : MonoBehaviour
                 //Debug.Log("wwwww");
                 //重み変更
                 for(int i=0;i<data.w.Length;i++){
-                    float a=(10f-data.goalcount)*0.1f;
+                    float a=(100f-data.goalcount)*0.01f;
                     if(a<0)a=1;
                     data.w[i]+=Random.Range(-0.5f*a,0.5f*a);
                 }
@@ -52,7 +54,9 @@ public class titel : MonoBehaviour
         output=data.output.Length;
         w=data.w.Length;
 
-        
+            float x = Random.Range(-1f, 1f) *speed;
+            float y = Random.Range(-1f, 1f) *speed;
+            rb.AddForce(x, y, 0);
     }
 
     void Update()
@@ -61,13 +65,10 @@ public class titel : MonoBehaviour
         float x = 0,y=0;
         if (t == 0)
         {
-            if(Random.Range(0f,1f)<0.1f || wb==true){
-             x = Random.Range(-1f, 1f) * speed;
-             y = Random.Range(-1f, 1f) * speed;
-            }else{
-                x = data.output[0] * speed;
-                y = data.output[1] * speed;
-            }
+            
+            x = data.output[0] * speed;
+            y = data.output[1] * speed;
+        
         
             t = s;
         }t--;
@@ -150,7 +151,7 @@ public class titel : MonoBehaviour
         //     data.output[i] = zz[j-1,k-1] * data.w[i + data.input.Length + N];
         //     //Debug.Log(data.output[i]+" "+i);         
         // }
-        int[] M={5,4,3,2,1,2};
+        int[] M={1,2,3,4,5,2};
         int N=M.Length,wc=-1;
         float x=0,z=0;
         float[] xx=new float[input],net=new float[input];
@@ -238,15 +239,15 @@ public class titel : MonoBehaviour
         {
             case "out":
                 data.input[i] = 0.5f;
-                data.point -= 0.001f;
                 break;
             case "block":
-                data.input[i] = 1.0f;
-                data.point += 0.001f;
+                data.input[i] = 1.0f;           
                 break;
             case "item":
                 data.input[i] = 1.5f;
-                data.point += 0.002f;
+                break;
+            case "goal":
+                data.input[i] = 2.5f;
                 break;
             default:
                 data.input[i] = 2.0f;

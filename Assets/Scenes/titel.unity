@@ -216,8 +216,8 @@ MonoBehaviour:
   ca: {fileID: 1877385365}
   p: {fileID: 80537755}
   goal: {fileID: 1991642399}
-  wb: 1
-  dataname: savedata
+  wb: 0
+  dataname: goal1
 --- !u!54 &80537758
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5113,6 +5113,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1609290294519735652, guid: 800505e42fb48f74bb52c6f6e09694f9, type: 3}
+      propertyPath: m_TagString
+      value: out
+      objectReference: {fileID: 0}
     - target: {fileID: 6432211699374444359, guid: 800505e42fb48f74bb52c6f6e09694f9, type: 3}
       propertyPath: m_RootOrder
       value: 21
@@ -5161,6 +5165,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6792656127648733498, guid: 800505e42fb48f74bb52c6f6e09694f9, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: c795f453ce6dfd14e9b90d06236e4061, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 800505e42fb48f74bb52c6f6e09694f9, type: 3}
 --- !u!1001 &1230433797
@@ -7505,7 +7513,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6834728289368026021, guid: 55d9042251be9424abfc64b14b96e99b, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 55d9042251be9424abfc64b14b96e99b, type: 3}

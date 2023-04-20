@@ -78,41 +78,8 @@ public class titel : MonoBehaviour
 
         origin = this.transform.position; // 原点
 
-        //  int vx=10, vy=0;
-        //  for (int i = 0; i < 4; i++)
-        //  {
-
-        //      switch (i)
-        //      {
-        //          case 1:
-        //              vx = -10;
-        //              break;
-        //          case 2:
-        //              vx = 0;
-        //              vy = 10;
-        //              break;
-        //          case 3:
-        //              vy = -10;
-        //              break;
-        //      }
-        //      Vector3 direction = new Vector3(vx, vy, 0); // X軸方向を表すベクトル
-        //      Ray ray = new Ray(origin: origin, direction: direction); // Rayを生成
-        //      RaycastHit hit;
-
-        //      //Rayの衝突判定
-        //      if (Physics.Raycast(ray, out hit, 10f))
-        //      {
-
-        //          //Debug.Log(hit.collider.gameObject.tag);
-
-
-        //          //Debug.Log(data.input[i+4]+" "+i);
-        //      }
-
-        //      Debug.DrawRay(ray.origin, direction, Color.red, .5f);
-        //  }
-        //data.point-=0.0001f;
         data.input[data.input.Length-1]=Vector3.Distance(origin,goal.position);
+        data.input[input-2]=Random.Range(-1f,1f);
         //Debug.Log(data.input[data.input.Length-1]);
 
         Network();
@@ -151,7 +118,7 @@ public class titel : MonoBehaviour
         //     data.output[i] = zz[j-1,k-1] * data.w[i + data.input.Length + N];
         //     //Debug.Log(data.output[i]+" "+i);         
         // }
-        int[] M={1,2,3,4,5,2};
+        int[] M={5,5,2};
         int N=M.Length,wc=-1;
         float x=0,z=0;
         float[] xx=new float[input],net=new float[input];

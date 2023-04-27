@@ -217,7 +217,7 @@ MonoBehaviour:
   p: {fileID: 80537755}
   goal: {fileID: 1991642399}
   wb: 0
-  dataname: goal1
+  dataname: inout1
 --- !u!54 &80537758
 Rigidbody:
   m_ObjectHideFlags: 0

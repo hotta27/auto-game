@@ -98,67 +98,59 @@ public class titel : MonoBehaviour
    
     void Network()
     {
-        // int N=1,M=1,j,k=0;
+        // int[] M={5,5,2};
+        // int N=M.Length,wc=-1;
         // float x=0,z=0;
-        // float[,] xx=new float[N,M],zz=new float[N,M];
-        
-        // for (int i=0; i<data.input.Length;i++) x += data.input[i] * data.w[i];  
-        // z = Sigmoid(x);
-        // for (j = 0; j < N; j++)
-        // {
-        //     for (k = 0; k < M; k++)
-        //     {
-        //         xx[j,k] = 0;
-        //         xx[j,k] += z * data.w[input + 1];
-        //         zz[j,k] = Sigmoid(xx[j,k]);
+        // float[] xx=new float[input],net=new float[input];
+         
+        //  //Debug.Log("----------------");
+                        
+        // xx=data.input;                  
+        // for(int i=0;i<N;i++){
+        //     for(int j=0;j<M[i];j++){                
+        //             net=xx;
+        //             System.Array.Resize(ref net, xx.Length);
+        //             System.Array.Resize(ref xx,M[i]);
+                
+        //             // foreach(float name in net)
+        //             // {
+        //             //     Debug.Log(name+" <"+i+" ,"+j+">");
+        //             // }
+        //             int k; 
+        //         for(k=0;k<net.Length;k++){
+        //             wc+=1;
+        //             xx[j]+=net[k]*data.w[wc];
+        //             // Debug.Log(i+","+j+","+k+":"+net.Length);
+        //         }
+                
+        //         xx[j]=Sigmoid(xx[j]);
+        //         if(i==N-1) data.output[j]=xx[j];
         //     }
         // }
-        // for (int i = 0; i < data.output.Length; i++)
-        // {
-        //     data.output[i] = zz[j-1,k-1] * data.w[i + data.input.Length + N];
-        //     //Debug.Log(data.output[i]+" "+i);         
-        // }
-        int[] M={5,5,2};
-        int N=M.Length,wc=-1;
-        float x=0,z=0;
-        float[] xx=new float[input],net=new float[input];
-         
-         //Debug.Log("----------------");
-                        
-        xx=data.input;                  
-        for(int i=0;i<N;i++){
-            for(int j=0;j<M[i];j++){                
-                    net=xx;
-                    System.Array.Resize(ref net, xx.Length);
-                    System.Array.Resize(ref xx,M[i]);
-                
-                    // foreach(float name in net)
-                    // {
-                    //     Debug.Log(name+" <"+i+" ,"+j+">");
-                    // }
-                    int k; 
-                for(k=0;k<net.Length;k++){
-                    wc+=1;
-                    xx[j]+=net[k]*data.w[wc];
-                    // Debug.Log(i+","+j+","+k+":"+net.Length);
-                }
-                
-                xx[j]=Sigmoid(xx[j]);
-                if(i==N-1) data.output[j]=xx[j];
-            }
+        float z;
+        float 
+        z=inout(data.input,0);
+        z=inout(z,6);
+        for(int i=0;i<output;i++)
+            data.output[i]=z*data.w[output-i];
+    }
 
-
-
-
+    float inout(float[] x,int wi){
+        float z=0f;
+        for(int i=0;i<x.Length;i++){
+        z+=x[i]*data.w[wi+i];
         }
-        
+        if(z>data.w[wi+x.Length-1]) return 1f;
+        else return 0f;
 
     }
 
-    float Sigmoid(float x)
-    {
-        float z = 1 / (1 + Mathf.Exp(-x));
-        return z;
+    float Sigmoid(float[] x,int wi){
+        float z=0;
+        for(int i=0;i<x.Length;i++){
+        z+=x[i]*data.w[wi+i];
+        }
+        return z = 1 / (1 + Mathf.Exp(-z));
     }
 
     void finsh (){

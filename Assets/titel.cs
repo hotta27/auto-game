@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 
 
+
 public class titel : MonoBehaviour
 {
     public float speed = 10.0f;
@@ -13,13 +14,12 @@ public class titel : MonoBehaviour
     public Transform goal;
     public bool wb=true;
     public string dataname="savedata";
-    int t,s=500,input,output,w;
+    int t,s=500,input,output,w,wi=0;
     float n=30,pp=0;
     Data data;
     savedata save;
     GameObject xnot;
     Vector3 origin;
-
     
 
     void Start()
@@ -40,11 +40,9 @@ public class titel : MonoBehaviour
             if(wb){
                 //Debug.Log("wwwww");
                 //重み変更
-                for(int i=0;i<data.w.Length;i++){
-                    float a=(100f-data.goalcount)*0.01f;
-                    if(a<0)a=1;
-                    data.w[i]+=Random.Range(-0.5f*a,0.5f*a);
-                }
+                for(int i=0;i<data.w.Length;i++)
+                    data.w[i]+=Random.Range(-1f,1f);
+                
             }
             pp=data.point;
             data.point=0;
@@ -62,19 +60,19 @@ public class titel : MonoBehaviour
     void Update()
     {
         //Debug.Log(data.point);
-        float x = 0,y=0;
+        float x=0,y=0;
         if (t == 0)
-        {
-            
+        {            
             x = data.output[0] * speed;
             y = data.output[1] * speed;
-        
-        
+            Debug.Log(x+","+y);
+             rb.AddForce(x, y, 0);
             t = s;
         }t--;
-        rb.AddForce(x, y, 0);
+       
         ca.transform.position = new Vector3(p.transform.position.x, p.transform.position.y + 1, -10);
-
+        data.input[4]=p.transform.position.x;
+        data.input[5]=p.transform.position.y;
 
         origin = this.transform.position; // 原点
 
@@ -98,50 +96,36 @@ public class titel : MonoBehaviour
    
     void Network()
     {
-        // int[] M={5,5,2};
-        // int N=M.Length,wc=-1;
-        // float x=0,z=0;
-        // float[] xx=new float[input],net=new float[input];
-         
-        //  //Debug.Log("----------------");
-                        
-        // xx=data.input;                  
-        // for(int i=0;i<N;i++){
-        //     for(int j=0;j<M[i];j++){                
-        //             net=xx;
-        //             System.Array.Resize(ref net, xx.Length);
-        //             System.Array.Resize(ref xx,M[i]);
-                
-        //             // foreach(float name in net)
-        //             // {
-        //             //     Debug.Log(name+" <"+i+" ,"+j+">");
-        //             // }
-        //             int k; 
-        //         for(k=0;k<net.Length;k++){
-        //             wc+=1;
-        //             xx[j]+=net[k]*data.w[wc];
-        //             // Debug.Log(i+","+j+","+k+":"+net.Length);
-        //         }
-                
-        //         xx[j]=Sigmoid(xx[j]);
-        //         if(i==N-1) data.output[j]=xx[j];
-        //     }
-        // }
-        float z;
-        float 
-        z=inout(data.input,0);
-        z=inout(z,6);
-        for(int i=0;i<output;i++)
-            data.output[i]=z*data.w[output-i];
+        float[] z=new float[8],num=new float[10];
+        int [] M={6,4,2};
+        int N=M.Length;
+       
+        for(int i=0;i<8;i++)
+            z[i]=inout(data.input);
+
+    for(int j=0;j<N;j++){
+        for(int i=0;i<M[j];i++)
+            z[i]=inout(z);
+        System.Array.Resize(ref z, M[j]);
+        
     }
 
-    float inout(float[] x,int wi){
-        float z=0f;
+
+        wi=0;
+        for(int i=0;i<output;i++)
+            data.output[i]=z[i]*data.w[output-i];
+    }
+
+    float inout(float[] x){
+        float z=0f,a;
         for(int i=0;i<x.Length;i++){
         z+=x[i]*data.w[wi+i];
         }
-        if(z>data.w[wi+x.Length-1]) return 1f;
-        else return 0f;
+        if(z>data.w[wi+x.Length-1]) a = 1f;
+        else a = 0f;
+        wi+=x.Length+1;
+       
+        return a;
 
     }
 
@@ -150,6 +134,7 @@ public class titel : MonoBehaviour
         for(int i=0;i<x.Length;i++){
         z+=x[i]*data.w[wi+i];
         }
+        
         return z = 1 / (1 + Mathf.Exp(-z));
     }
 

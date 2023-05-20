@@ -9,7 +9,7 @@ using System.IO; // �t�@�C���������݂ɕK�v
     [Serializable]
 public class Data
 {
-    public float[] input=new float[6], output=new float[2], w=new float[9];
+    public float[] input=new float[8], output=new float[2], w=new float[166];
     public float point=0f,move=0.5f;
     public int goalcount = 0;
     

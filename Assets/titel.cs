@@ -65,7 +65,7 @@ public class titel : MonoBehaviour
         {            
             x = data.output[0] * speed;
             y = data.output[1] * speed;
-            Debug.Log(x+","+y);
+            //Debug.Log(x+","+y);
              rb.AddForce(x, y, 0);
             t = s;
         }t--;
@@ -97,15 +97,19 @@ public class titel : MonoBehaviour
     void Network()
     {
         float[] z=new float[8],num=new float[10];
-        int [] M={6,4,2};
+        int [] M={6,4,2,2,2};
         int N=M.Length;
        
         for(int i=0;i<8;i++)
             z[i]=inout(data.input);
 
     for(int j=0;j<N;j++){
-        for(int i=0;i<M[j];i++)
-            z[i]=inout(z);
+        for(int i=0;i<M[j];i++){
+            if(j%2==1)
+                z[i]=inout(z);
+            else
+                z[i]=Sigmoid(z);
+        }
         System.Array.Resize(ref z, M[j]);
         
     }
@@ -129,8 +133,8 @@ public class titel : MonoBehaviour
 
     }
 
-    float Sigmoid(float[] x,int wi){
-        float z=0;
+    float Sigmoid(float[] x){
+        float z=0f;
         for(int i=0;i<x.Length;i++){
         z+=x[i]*data.w[wi+i];
         }
@@ -197,9 +201,10 @@ public class titel : MonoBehaviour
                 data.input[i] = 2.0f;
                 break;
         }
+     
         data.input[1] = other.transform.position.x;
         data.input[2] = other.transform.position.y;
-        //Debug.Log(data.input[1] + " "+"\n"+ data.input[2]+other.gameObject.tag);
+        Debug.Log(data.input[1] + " "+ data.input[2]+"\n"+other.gameObject.tag);
         data.input[3] = Vector3.Distance(origin, other.transform.position);
     }
 }
